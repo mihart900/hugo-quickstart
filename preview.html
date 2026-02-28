@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dancing Claude</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap');
+
+    :root {
+      --main-family: 'Poppins', sans-serif;
+      --color-bg: linear-gradient(180deg, #FFFFFF 0%, #AEC6DC 100%);
+      --top-right-blur-1: #2ebc92;
+      --top-right-blur-2: #ecbb50;
+      --bttm-left-blur-1: #ff3e89;
+      --bttm-left-blur-2: #0095cc;
+      --claude-orange: #D97757;
+      --claude-tan: #F0E0D0;
+      --claude-dark: #2D1B14;
+    }
+
+    html {
+      background: var(--color-bg);
+      font-family: var(--main-family);
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      overflow-x: hidden;
+    }
+
+    #background {
+      position: fixed;
+      width: 100%;
+      z-index: -1;
+      height: 100%;
+    }
+
+    #content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0 auto;
+    }
+
+    .header { text-align: center; }
+
+    .header h1 {
+      padding-top: 5%;
+      margin: 0;
+      font-size: calc(max(5vw, 32px));
+      color: var(--claude-dark);
+    }
+
+    .bttns { margin-bottom: 5%; }
+
+    .bttn {
+      padding: 15px;
+      border-radius: 5px;
+      width: 150px;
+      margin: 0 1%;
+      text-decoration: none;
+    }
+
+    .bttn.secondary {
+      background: transparent;
+      border: #093C4F 2px solid;
+      color: #0D1D24;
+    }
+
+    .bttn.secondary:hover {
+      background: #05171f;
+      color: white;
+    }
+
+    /* DANCING CLAUDE */
+    .dance-stage {
+      position: relative;
+      width: 400px;
+      height: 420px;
+      margin: 20px auto 10px;
+    }
+
+    .claude-character {
+      position: absolute;
+      left: 50%;
+      top: 40px;
+      transform: translateX(-50%);
+      animation: bounce 0.6s ease-in-out infinite;
+    }
+
+    .claude-head {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      margin: 0 auto;
+      z-index: 3;
+      animation: headBob 0.6s ease-in-out infinite;
+    }
+
+    .sparkle {
+      width: 80px;
+      height: 80px;
+      filter: drop-shadow(0 2px 6px rgba(217, 119, 87, 0.4));
+    }
+
+    .claude-face {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 40px;
+      height: 30px;
+    }
+
+    .eye {
+      position: absolute;
+      width: 6px;
+      height: 8px;
+      background: var(--claude-dark);
+      border-radius: 50%;
+      top: 4px;
+      animation: blink 3s ease-in-out infinite;
+    }
+
+    .left-eye { left: 6px; }
+    .right-eye { right: 6px; }
+
+    .mouth {
+      position: absolute;
+      bottom: 2px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 14px;
+      height: 7px;
+      border-bottom: 3px solid var(--claude-dark);
+      border-radius: 0 0 10px 10px;
+    }
+
+    .claude-body {
+      width: 50px;
+      height: 65px;
+      background: var(--claude-orange);
+      margin: -8px auto 0;
+      border-radius: 25px 25px 20px 20px;
+      position: relative;
+      z-index: 2;
+      box-shadow: 0 2px 10px rgba(217, 119, 87, 0.3);
+    }
+
+    .claude-arm {
+      position: absolute;
+      width: 14px;
+      height: 45px;
+      background: var(--claude-orange);
+      border-radius: 7px;
+      top: 82px;
+      z-index: 1;
+      transform-origin: top center;
+    }
+
+    .arm-lower {
+      position: absolute;
+      bottom: -20px;
+      left: 0;
+      width: 14px;
+      height: 25px;
+      background: var(--claude-orange);
+      border-radius: 7px;
+      transform-origin: top center;
+    }
+
+    .left-arm {
+      left: calc(50% - 55px);
+      animation: leftArmDance 0.6s ease-in-out infinite;
+    }
+
+    .left-arm .arm-lower {
+      animation: leftArmLowerDance 0.6s ease-in-out infinite;
+    }
+
+    .right-arm {
+      right: calc(50% - 55px);
+      animation: rightArmDance 0.6s ease-in-out infinite;
+    }
+
+    .right-arm .arm-lower {
+      animation: rightArmLowerDance 0.6s ease-in-out infinite;
+    }
+
+    .claude-leg {
+      position: absolute;
+      width: 16px;
+      height: 40px;
+      background: var(--claude-dark);
+      border-radius: 8px;
+      top: 195px;
+      z-index: 1;
+      transform-origin: top center;
+    }
+
+    .leg-lower {
+      position: absolute;
+      bottom: -28px;
+      left: 0;
+      width: 16px;
+      height: 32px;
+      background: var(--claude-dark);
+      border-radius: 8px;
+      transform-origin: top center;
+    }
+
+    .shoe {
+      position: absolute;
+      bottom: -56px;
+      left: -4px;
+      width: 24px;
+      height: 12px;
+      background: var(--claude-orange);
+      border-radius: 12px 12px 6px 6px;
+    }
+
+    .left-leg {
+      left: calc(50% - 28px);
+      animation: leftLegDance 0.6s ease-in-out infinite;
+    }
+
+    .left-leg .leg-lower {
+      animation: leftLegLowerDance 0.6s ease-in-out infinite;
+    }
+
+    .right-leg {
+      right: calc(50% - 28px);
+      animation: rightLegDance 0.6s ease-in-out infinite;
+    }
+
+    .right-leg .leg-lower {
+      animation: rightLegLowerDance 0.6s ease-in-out infinite;
+    }
+
+    .dance-floor {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%) perspective(300px) rotateX(40deg);
+      display: flex;
+      gap: 4px;
+    }
+
+    .floor-tile {
+      width: 48px;
+      height: 48px;
+      border-radius: 4px;
+      animation: floorPulse 1.2s ease-in-out infinite;
+    }
+
+    .floor-tile:nth-child(1) { background: rgba(217, 119, 87, 0.5); animation-delay: 0s; }
+    .floor-tile:nth-child(2) { background: rgba(46, 188, 146, 0.5); animation-delay: 0.15s; }
+    .floor-tile:nth-child(3) { background: rgba(236, 187, 80, 0.5); animation-delay: 0.3s; }
+    .floor-tile:nth-child(4) { background: rgba(255, 62, 137, 0.5); animation-delay: 0.45s; }
+    .floor-tile:nth-child(5) { background: rgba(0, 149, 204, 0.5); animation-delay: 0.6s; }
+    .floor-tile:nth-child(6) { background: rgba(217, 119, 87, 0.5); animation-delay: 0.75s; }
+    .floor-tile:nth-child(7) { background: rgba(46, 188, 146, 0.5); animation-delay: 0.9s; }
+
+    .music-note {
+      position: absolute;
+      font-size: 32px;
+      color: var(--claude-orange);
+      opacity: 0;
+      animation: floatNote 2.4s ease-out infinite;
+    }
+
+    .note-1 { top: 30px; left: 40px; animation-delay: 0s; }
+    .note-2 { top: 60px; right: 50px; animation-delay: 0.6s; }
+    .note-3 { top: 10px; right: 80px; animation-delay: 1.2s; }
+    .note-4 { top: 50px; left: 70px; animation-delay: 1.8s; }
+
+    .dance-subtitle {
+      font-size: 1.4rem;
+      color: var(--claude-dark);
+      margin: 0 0 20px;
+      font-weight: 500;
+      animation: subtitlePulse 2s ease-in-out infinite;
+    }
+
+    /* KEYFRAMES */
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50% { transform: translateX(-50%) translateY(-18px); }
+    }
+
+    @keyframes headBob {
+      0%, 100% { transform: rotate(-8deg); }
+      50% { transform: rotate(8deg); }
+    }
+
+    @keyframes blink {
+      0%, 45%, 55%, 100% { transform: scaleY(1); }
+      50% { transform: scaleY(0.1); }
+    }
+
+    @keyframes leftArmDance {
+      0%, 100% { transform: rotate(30deg); }
+      50% { transform: rotate(-60deg); }
+    }
+
+    @keyframes leftArmLowerDance {
+      0%, 100% { transform: rotate(-20deg); }
+      50% { transform: rotate(30deg); }
+    }
+
+    @keyframes rightArmDance {
+      0%, 100% { transform: rotate(-30deg); }
+      50% { transform: rotate(60deg); }
+    }
+
+    @keyframes rightArmLowerDance {
+      0%, 100% { transform: rotate(20deg); }
+      50% { transform: rotate(-30deg); }
+    }
+
+    @keyframes leftLegDance {
+      0%, 100% { transform: rotate(-15deg); }
+      50% { transform: rotate(20deg); }
+    }
+
+    @keyframes leftLegLowerDance {
+      0%, 100% { transform: rotate(10deg); }
+      50% { transform: rotate(-25deg); }
+    }
+
+    @keyframes rightLegDance {
+      0%, 100% { transform: rotate(15deg); }
+      50% { transform: rotate(-20deg); }
+    }
+
+    @keyframes rightLegLowerDance {
+      0%, 100% { transform: rotate(-10deg); }
+      50% { transform: rotate(25deg); }
+    }
+
+    @keyframes floorPulse {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.08); }
+    }
+
+    @keyframes floatNote {
+      0% { opacity: 0; transform: translateY(0) rotate(0deg) scale(0.5); }
+      15% { opacity: 1; transform: translateY(-20px) rotate(-10deg) scale(1); }
+      85% { opacity: 0.6; transform: translateY(-100px) rotate(15deg) scale(1.1); }
+      100% { opacity: 0; transform: translateY(-130px) rotate(20deg) scale(0.8); }
+    }
+
+    @keyframes subtitlePulse {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 1; }
+    }
+
+    @media only screen and (max-width: 500px) {
+      .dance-stage { width: 300px; height: 350px; }
+      .floor-tile { width: 36px; height: 36px; }
+      .dance-subtitle { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+  <svg id="background" width='1728' height='1235' viewBox="0 0 1728 1235" fill='none' xmlns='http://www.w3.org/2000/svg'><g opacity='0.75' filter='url(#filter0_f_39_143)'><circle cy='1000' r='264' fill='url(#paint0_linear_39_143)'/></g><g opacity='0.65' filter='url(#filter1_f_39_143)'><circle cx='1720' cy='264' r='379' fill='url(#paint1_linear_39_143)'/></g><defs><filter id='filter0_f_39_143' x='-485' y='515' width='970' height='970' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'><feFlood flood-opacity='0' result='BackgroundImageFix'/><feBlend mode='normal' in='SourceGraphic' in2='BackgroundImageFix' result='shape'/><feGaussianBlur stdDeviation='110.5' result='effect1_foregroundBlur_39_143'/></filter><filter id='filter1_f_39_143' x='1120' y='-336' width='1200' height='1200' filterUnits='userSpaceOnUse' color-interpolation-filters='sRGB'><feFlood flood-opacity='0' result='BackgroundImageFix'/><feBlend mode='normal' in='SourceGraphic' in2='BackgroundImageFix' result='shape'/><feGaussianBlur stdDeviation='110.5' result='effect1_foregroundBlur_39_143'/></filter><linearGradient id='paint0_linear_39_143' x1='196.5' y1='902' x2='-2.55853e-05' y2='1264' gradientUnits='userSpaceOnUse'><stop stop-color="#ff3e89"/><stop offset='1' stop-color="#0095cc"/></linearGradient><linearGradient id='paint1_linear_39_143' x1='1720' y1='-115' x2='1720' y2='643' gradientUnits='userSpaceOnUse'><stop stop-color="#2ebc92"/><stop offset='1' stop-color="#ecbb50"/></linearGradient></defs></svg>
+
+  <div id="content">
+    <div class="header">
+      <h1>Dancing Claude</h1>
+    </div>
+
+    <div class="dance-stage">
+      <div class="claude-character">
+        <div class="claude-head">
+          <svg viewBox="0 0 100 100" class="sparkle">
+            <polygon points="50,0 58,36 95,50 58,64 50,100 42,64 5,50 42,36" fill="#D97757"/>
+          </svg>
+          <div class="claude-face">
+            <div class="eye left-eye"></div>
+            <div class="eye right-eye"></div>
+            <div class="mouth"></div>
+          </div>
+        </div>
+        <div class="claude-body"></div>
+        <div class="claude-arm left-arm"><div class="arm-lower"></div></div>
+        <div class="claude-arm right-arm"><div class="arm-lower"></div></div>
+        <div class="claude-leg left-leg"><div class="leg-lower"></div><div class="shoe"></div></div>
+        <div class="claude-leg right-leg"><div class="leg-lower"></div><div class="shoe"></div></div>
+      </div>
+
+      <div class="dance-floor">
+        <div class="floor-tile"></div>
+        <div class="floor-tile"></div>
+        <div class="floor-tile"></div>
+        <div class="floor-tile"></div>
+        <div class="floor-tile"></div>
+        <div class="floor-tile"></div>
+        <div class="floor-tile"></div>
+      </div>
+
+      <div class="music-note note-1">&#9835;</div>
+      <div class="music-note note-2">&#9834;</div>
+      <div class="music-note note-3">&#9833;</div>
+      <div class="music-note note-4">&#9835;</div>
+    </div>
+
+    <h2 class="dance-subtitle">Claude is feeling the rhythm!</h2>
+  </div>
+</body>
+</html>

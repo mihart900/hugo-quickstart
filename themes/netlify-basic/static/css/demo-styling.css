@@ -9,6 +9,11 @@
   --top-right-blur-2: #ecbb50;
   --bttm-left-blur-1: #ff3e89;
   --bttm-left-blur-2: #0095cc;
+
+  /* Claude brand colors */
+  --claude-orange: #D97757;
+  --claude-tan: #F0E0D0;
+  --claude-dark: #2D1B14;
 }
 
 html {
@@ -19,6 +24,7 @@ html {
 
 body{
   margin: 0;
+  overflow-x: hidden;
 }
 
 #background {
@@ -43,6 +49,7 @@ body{
   padding-top:5%;
   margin: 0;
   font-size: calc(max(5vw, 32px));
+  color: var(--claude-dark);
 }
 
 .header .logo img {
@@ -89,7 +96,6 @@ body{
 .bttn.primary:hover {
   background: #21a69a;
   box-shadow: inset 3px 4px 10px rgb(35 33 33 / 40%);
-  /* -webkit-box-shadow: inset 3px 4px 10px rgb(35 33 33 / 40%); */
 }
 
 .bttn.secondary{
@@ -127,4 +133,360 @@ body{
 .resource-list a {
   color: black;
   line-height: 30px;
+}
+
+/* ============================================
+   DANCING CLAUDE ANIMATION
+   ============================================ */
+
+.dance-stage {
+  position: relative;
+  width: 400px;
+  height: 420px;
+  margin: 20px auto 10px;
+}
+
+.claude-character {
+  position: absolute;
+  left: 50%;
+  top: 40px;
+  transform: translateX(-50%);
+  animation: bounce 0.6s ease-in-out infinite;
+}
+
+/* Head / Sparkle */
+.claude-head {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto;
+  z-index: 3;
+  animation: headBob 0.6s ease-in-out infinite;
+}
+
+.sparkle {
+  width: 80px;
+  height: 80px;
+  filter: drop-shadow(0 2px 6px rgba(217, 119, 87, 0.4));
+}
+
+.claude-face {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 30px;
+}
+
+.eye {
+  position: absolute;
+  width: 6px;
+  height: 8px;
+  background: var(--claude-dark);
+  border-radius: 50%;
+  top: 4px;
+  animation: blink 3s ease-in-out infinite;
+}
+
+.left-eye {
+  left: 6px;
+}
+
+.right-eye {
+  right: 6px;
+}
+
+.mouth {
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 7px;
+  border-bottom: 3px solid var(--claude-dark);
+  border-radius: 0 0 10px 10px;
+}
+
+/* Body */
+.claude-body {
+  width: 50px;
+  height: 65px;
+  background: var(--claude-orange);
+  margin: -8px auto 0;
+  border-radius: 25px 25px 20px 20px;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 2px 10px rgba(217, 119, 87, 0.3);
+}
+
+/* Arms */
+.claude-arm {
+  position: absolute;
+  width: 14px;
+  height: 45px;
+  background: var(--claude-orange);
+  border-radius: 7px;
+  top: 82px;
+  z-index: 1;
+  transform-origin: top center;
+}
+
+.arm-lower {
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  width: 14px;
+  height: 25px;
+  background: var(--claude-orange);
+  border-radius: 7px;
+  transform-origin: top center;
+}
+
+.left-arm {
+  left: calc(50% - 55px);
+  animation: leftArmDance 0.6s ease-in-out infinite;
+}
+
+.left-arm .arm-lower {
+  animation: leftArmLowerDance 0.6s ease-in-out infinite;
+}
+
+.right-arm {
+  right: calc(50% - 55px);
+  animation: rightArmDance 0.6s ease-in-out infinite;
+}
+
+.right-arm .arm-lower {
+  animation: rightArmLowerDance 0.6s ease-in-out infinite;
+}
+
+/* Legs */
+.claude-leg {
+  position: absolute;
+  width: 16px;
+  height: 40px;
+  background: var(--claude-dark);
+  border-radius: 8px;
+  top: 195px;
+  z-index: 1;
+  transform-origin: top center;
+}
+
+.leg-lower {
+  position: absolute;
+  bottom: -28px;
+  left: 0;
+  width: 16px;
+  height: 32px;
+  background: var(--claude-dark);
+  border-radius: 8px;
+  transform-origin: top center;
+}
+
+.shoe {
+  position: absolute;
+  bottom: -56px;
+  left: -4px;
+  width: 24px;
+  height: 12px;
+  background: var(--claude-orange);
+  border-radius: 12px 12px 6px 6px;
+}
+
+.left-leg {
+  left: calc(50% - 28px);
+  animation: leftLegDance 0.6s ease-in-out infinite;
+}
+
+.left-leg .leg-lower {
+  animation: leftLegLowerDance 0.6s ease-in-out infinite;
+}
+
+.right-leg {
+  right: calc(50% - 28px);
+  animation: rightLegDance 0.6s ease-in-out infinite;
+}
+
+.right-leg .leg-lower {
+  animation: rightLegLowerDance 0.6s ease-in-out infinite;
+}
+
+/* Dance Floor */
+.dance-floor {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%) perspective(300px) rotateX(40deg);
+  display: flex;
+  gap: 4px;
+}
+
+.floor-tile {
+  width: 48px;
+  height: 48px;
+  border-radius: 4px;
+  animation: floorPulse 1.2s ease-in-out infinite;
+}
+
+.floor-tile:nth-child(1) { background: rgba(217, 119, 87, 0.5); animation-delay: 0s; }
+.floor-tile:nth-child(2) { background: rgba(46, 188, 146, 0.5); animation-delay: 0.15s; }
+.floor-tile:nth-child(3) { background: rgba(236, 187, 80, 0.5); animation-delay: 0.3s; }
+.floor-tile:nth-child(4) { background: rgba(255, 62, 137, 0.5); animation-delay: 0.45s; }
+.floor-tile:nth-child(5) { background: rgba(0, 149, 204, 0.5); animation-delay: 0.6s; }
+.floor-tile:nth-child(6) { background: rgba(217, 119, 87, 0.5); animation-delay: 0.75s; }
+.floor-tile:nth-child(7) { background: rgba(46, 188, 146, 0.5); animation-delay: 0.9s; }
+
+/* Music Notes */
+.music-note {
+  position: absolute;
+  font-size: 32px;
+  color: var(--claude-orange);
+  opacity: 0;
+  animation: floatNote 2.4s ease-out infinite;
+}
+
+.note-1 {
+  top: 30px;
+  left: 40px;
+  animation-delay: 0s;
+}
+
+.note-2 {
+  top: 60px;
+  right: 50px;
+  animation-delay: 0.6s;
+}
+
+.note-3 {
+  top: 10px;
+  right: 80px;
+  animation-delay: 1.2s;
+}
+
+.note-4 {
+  top: 50px;
+  left: 70px;
+  animation-delay: 1.8s;
+}
+
+.dance-subtitle {
+  font-size: 1.4rem;
+  color: var(--claude-dark);
+  margin: 0 0 20px;
+  font-weight: 500;
+  animation: subtitlePulse 2s ease-in-out infinite;
+}
+
+/* ============================================
+   KEYFRAME ANIMATIONS
+   ============================================ */
+
+@keyframes bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-18px); }
+}
+
+@keyframes headBob {
+  0%, 100% { transform: rotate(-8deg); }
+  50% { transform: rotate(8deg); }
+}
+
+@keyframes blink {
+  0%, 45%, 55%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.1); }
+}
+
+/* Left arm swings up and out */
+@keyframes leftArmDance {
+  0%, 100% { transform: rotate(30deg); }
+  50% { transform: rotate(-60deg); }
+}
+
+@keyframes leftArmLowerDance {
+  0%, 100% { transform: rotate(-20deg); }
+  50% { transform: rotate(30deg); }
+}
+
+/* Right arm mirrors with offset */
+@keyframes rightArmDance {
+  0%, 100% { transform: rotate(-30deg); }
+  50% { transform: rotate(60deg); }
+}
+
+@keyframes rightArmLowerDance {
+  0%, 100% { transform: rotate(20deg); }
+  50% { transform: rotate(-30deg); }
+}
+
+/* Legs kick alternately */
+@keyframes leftLegDance {
+  0%, 100% { transform: rotate(-15deg); }
+  50% { transform: rotate(20deg); }
+}
+
+@keyframes leftLegLowerDance {
+  0%, 100% { transform: rotate(10deg); }
+  50% { transform: rotate(-25deg); }
+}
+
+@keyframes rightLegDance {
+  0%, 100% { transform: rotate(15deg); }
+  50% { transform: rotate(-20deg); }
+}
+
+@keyframes rightLegLowerDance {
+  0%, 100% { transform: rotate(-10deg); }
+  50% { transform: rotate(25deg); }
+}
+
+/* Dance floor tile glow */
+@keyframes floorPulse {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
+/* Floating music notes */
+@keyframes floatNote {
+  0% {
+    opacity: 0;
+    transform: translateY(0) rotate(0deg) scale(0.5);
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(-20px) rotate(-10deg) scale(1);
+  }
+  85% {
+    opacity: 0.6;
+    transform: translateY(-100px) rotate(15deg) scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-130px) rotate(20deg) scale(0.8);
+  }
+}
+
+@keyframes subtitlePulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media only screen and (max-width: 500px) {
+  .dance-stage {
+    width: 300px;
+    height: 350px;
+  }
+
+  .floor-tile {
+    width: 36px;
+    height: 36px;
+  }
+
+  .dance-subtitle {
+    font-size: 1.1rem;
+  }
 }
